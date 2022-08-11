@@ -11,5 +11,9 @@ application_type = "web"
 
 # Network
 virtual_network_name = "hsonnlRGtest-vnet"
-address_space        = ["10.0.4.0/16"]
-address_prefix_test  = "10.4.1.0/24"
+address_space        = ["10.0.0.0/16"]
+address_prefix_test  = ["10.0.0.0/24"]
+address_prefix_nsg  = "10.0.0.0/24"
+
+# App service
+app_service_name = "hsonnlAS"

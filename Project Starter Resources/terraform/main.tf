@@ -37,7 +37,7 @@ module "nsg-test" {
   resource_type    = "NSG"
   resource_group   = "${module.resource_group.resource_group_name}"
   subnet_id        = "${module.network.subnet_id_test}"
-  address_prefix_test = "${var.address_prefix_test}"
+  address_prefix_test = "${var.address_prefix_nsg}"
 }
 module "appservice" {
   source           = "./modules/appservice"
@@ -45,6 +45,7 @@ module "appservice" {
   application_type = "${var.application_type}"
   resource_type    = "AppService"
   resource_group   = "${module.resource_group.resource_group_name}"
+  app_service_name = "${var.app_service_name}"
 }
 module "publicip" {
   source           = "./modules/publicip"
