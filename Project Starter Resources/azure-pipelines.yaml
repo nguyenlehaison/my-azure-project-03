@@ -1,3 +1,26 @@
+trigger:
+- master
+
+variables:
+  # Azure Resource Manager connection created during pipeline creation
+  azureServiceConnectionId: '14fe3361-dbb1-459b-b7ba-234b932a0fb8'
+
+  # Web app name
+  webAppName: 'hsonnlAppService'
+
+  poolName: 'hsonnlPool'
+  # Agent VM image name
+  vmImageName: 'hsonnlVM'
+
+  # Environment name
+  environmentName: 'hsonnlEnv'
+
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)
+
+  # Python version: 3.7
+  pythonVersion: '3.7'
+
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
@@ -6,7 +29,8 @@ stages:
   jobs:
   - job: Build
     pool:
-      name: Hosted Ubuntu 1604
+      name: $(poolName)
+      vmImage: $(vmImageName)
     steps:
     # Needed for Terraform VM deployment
     # - task: InstallSSHKey@0
@@ -28,7 +52,8 @@ stages:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      vmImage: 'Ubuntu-16.04'
+      name: $(poolName)
+      vmImage: $(vmImageName)
     environment: 'TEST'
     strategy:
       runOnce:
