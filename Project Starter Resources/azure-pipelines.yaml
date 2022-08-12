@@ -55,7 +55,7 @@ stages:
       displayName: 'Upload Package'
       artifact: drop-fakerestapi
 
-    - task: Destroy Bash@3
+    - task: DestroyBash@3
       inputs:
         targetType: 'inline'
         script: |
