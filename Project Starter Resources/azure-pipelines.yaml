@@ -100,7 +100,7 @@ stages:
             inputs:
               azureSubscription: 'Azure for Students (4c298133-8bec-4ca0-94e5-9c0ba696cc54)'
               appType: 'webApp'
-              appName: 'web-AppService-web'
+              appName: $(webAppName)
               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
               deploymentMethod: 'auto'
           - task: JMeterInstaller@0
