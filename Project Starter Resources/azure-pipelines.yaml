@@ -37,7 +37,6 @@ stages:
           pwd
           ls
           terraform --version
-          $(projectRoot)
           # terraform init
           # terraform plan
           # terraform apply -auto-approve
