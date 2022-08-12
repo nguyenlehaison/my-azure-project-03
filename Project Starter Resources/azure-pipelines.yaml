@@ -27,31 +27,66 @@ stages:
   jobs:
   - job: Build
     pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
+      vmImage: 'ubuntu-latest'
     steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          terraform init
+          terraform plan
+          terraform apply -auto-approve
+        workingDirectory: './terraform'
     # Needed for Terraform VM deployment
-    # - task: InstallSSHKey@0
-    #   inputs:
-    #     knownHostsEntry: 'KNOWN_HOSTS_STRING'
-    #     sshPublicKey: 'PUBLIC_KEY'
-    #     sshKeySecureFile: 'id_rsa'
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/id_rsa.pub'
+        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFtZdtHxlP5HqadJdoiIKOERXfI34W1RAN2JMss2S8dhzZdlatt8acW90PCJf+nSrMQCP6VrExA6xr857vNAq+Ho7cxrlz0UTz/3J853XUSLUatgjtFbLhA3eWKCCbrwfUmk6wlWKuQJpr+b/48Pq/tUOUcxxe+W5anwX+iP55t8K4eTQHGYJzbjyVKpkn/zWNhPqiF3/Hw8uvzQ9OgtR3N7x+rVvEj2AlWsYImvECG7KWlX1VNQ9jSj6Vldf61zLCTgzqQFbwfON7VPxxrfg77HZJUwbRfv2L8Xhv6Doke1Agkyw0O7X+5s2xZngEV6As/gDBUeDXuk436lmu61wZEUM8rMH9mDi4lrhzVALJUDZLt6IkoE59cc4oFgar24pxG9XrNmi8LnEjdHJLbzJXENcg++N7sPOv6uDEQKz6ScFkzShhEXIU5deMX8UPT2ftQG12UylIKOP+3Ut2Tb+zNx3GIRtQZGG+zetbcua5xDwnS4f8P563cYmzRpOyQ8U= ngvba@UshioMini'
+        sshKeySecureFile: 'id_rsa'
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
-        rootFolderOrFile: 'path/to/fakerestapi'
+        rootFolderOrFile: './automatedtesting/jmeter/fakerestapi'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
       displayName: 'Upload Package'
       artifact: drop-fakerestapi
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: './/automatedtesting'
+        artifact: 'automatedtesting'
+        publishLocation: 'pipeline'
+
+  - job: Postman
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: 'sudo npm install -g newman'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
+
+        workingDirectory: './automatedtesting/postman'
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results for postman'
+      inputs:
+       testResultsFormat: 'JUnit'
+       testResultsFiles: '**/*.xml'
+       mergeTestResults: true
+       failTaskOnFailedTests: false
 - stage:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
+      vmImage: 'ubuntu-latest'
     environment: 'TEST'
     strategy:
       runOnce:
@@ -60,31 +95,137 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription: ''
-              appName: ''
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-  # - deployment: VMDeploy
-  #   displayName: NAME
-  #   environment:
-  #     name:  ENVIRONMENT NAME
-  #     resourceType: VirtualMachine
-  #     tags: TAG NAME
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - task: Bash@3
-  #           inputs:
-  #             targetType: 'inline'
-  #             script: |
-  #               #! /bin/bash
+              azureSubscription: 'Azure for Students (4c298133-8bec-4ca0-94e5-9c0ba696cc54)'
+              appType: 'webApp'
+              appName: 'web-AppService-web'
+              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+              deploymentMethod: 'auto'
+          - task: JMeterInstaller@0
+            inputs:
+              jmeterVersion: '5.4.2'
+          - task: TaurusInstaller@0
+            inputs:
+              taurusVersion: '1.15.3'
+              pythonCommand: 'python3'
+          - task: TaurusRunner@0
+            inputs:
+              taurusConfig: |
+                execution:
+                - scenario:
+                    # You can also reference a JMeter test plan (recommended)
+                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+                  concurrency: 5
+                  iterations: 10
+                  ramp-up: 2s
                 
-  #               sudo apt-get upgrade -y
-  #               sudo apt-get install python3-pip -y
-  #               sudo apt-get install unzip -y
-  #               sudo apt-get install -y chromium-browser
-  #               pip3 install selenium
-  #               export PATH=$PATH:some/path
+                reporting:
+                - module: junit-xml
+                  filename: taurus-output/TEST-Taurus.xml
+              jmeterHome: '$(JMeterInstaller.JMeterHome)'
+              jmeterPath: '$(JMeterInstaller.JMeterPath)'
+              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+              outputDir: 'taurus-output'
+  - deployment: VMDeploy
+    displayName: web
+    environment:
+      name:  TEST
+      resourceType: VirtualMachine
+      tags: web
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                #! /bin/bash
+                
+                sudo apt-get upgrade -y
+                sudo apt-get install python3 -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                sudo apt-get install chromium-chromedriver -y
+                pip3 install selenium
+                echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
+                source ~/.bash_profile
+                
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Run selenium
+                
+                git clone https://github.com/ngvbach2000/Project-Starter-Resources.git
+                cd Project-Starter-Resources
+                git pull
+                cd automatedtesting/selenium
+                python3 login.py
+##########################
+# stages:
+# - stage: Build
+#   jobs:
+#   - job: Build
+#     pool:
+#       name: $(poolName)
+#       vmImage: $(vmImageName)
+#     steps:
+#     # Needed for Terraform VM deployment
+#     # - task: InstallSSHKey@0
+#     #   inputs:
+#     #     knownHostsEntry: 'KNOWN_HOSTS_STRING'
+#     #     sshPublicKey: 'PUBLIC_KEY'
+#     #     sshKeySecureFile: 'id_rsa'
+#     - task: ArchiveFiles@2
+#       displayName: 'Archive FakeRestAPI'
+#       inputs:
+#         rootFolderOrFile: 'path/to/fakerestapi'
+#         includeRootFolder: false
+#         archiveType: 'zip'
+#         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+#       displayName: 'Upload Package'
+#       artifact: drop-fakerestapi
+# - stage:
+#   jobs:
+#   - deployment: FakeRestAPI
+#     pool:
+#       name: $(poolName)
+#       vmImage: $(vmImageName)
+#     environment: 'TEST'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: AzureWebApp@1
+#             displayName: 'Deploy Azure Web App'
+#             inputs:
+#               azureSubscription: ''
+#               appName: ''
+#               appType: webApp
+#               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+#   # - deployment: VMDeploy
+#   #   displayName: NAME
+#   #   environment:
+#   #     name:  ENVIRONMENT NAME
+#   #     resourceType: VirtualMachine
+#   #     tags: TAG NAME
+#   #   strategy:
+#   #     runOnce:
+#   #       deploy:
+#   #         steps:
+#   #         - task: Bash@3
+#   #           inputs:
+#   #             targetType: 'inline'
+#   #             script: |
+#   #               #! /bin/bash
+                
+#   #               sudo apt-get upgrade -y
+#   #               sudo apt-get install python3-pip -y
+#   #               sudo apt-get install unzip -y
+#   #               sudo apt-get install -y chromium-browser
+#   #               pip3 install selenium
+#   #               export PATH=$PATH:some/path
 
 
