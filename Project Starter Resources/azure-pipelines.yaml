@@ -27,7 +27,8 @@ stages:
   jobs:
   - job: Build
     pool:
-      vmImage: 'ubuntu-latest'
+      name: $(poolName)
+      vmImage: $(vmImageName)
     steps:
     - task: Bash@3
       inputs:
@@ -61,7 +62,8 @@ stages:
 
   - job: Postman
     pool:
-      vmImage: 'ubuntu-latest'
+      name: $(poolName)
+      vmImage: $(vmImageName)
     steps:
     - task: CmdLine@2
       displayName: Install Newman
@@ -86,7 +88,8 @@ stages:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      vmImage: 'ubuntu-latest'
+      name: $(poolName)
+      vmImage: $(vmImageName)
     environment: 'TEST'
     strategy:
       runOnce:
@@ -128,9 +131,9 @@ stages:
   - deployment: VMDeploy
     displayName: web
     environment:
-      name:  TEST
-      resourceType: VirtualMachine
-      tags: web
+      name:  'hsonnlEnv'
+      resourceType: 'hsonnlVM'
+      tags: 'web'
     strategy:
       runOnce:
         deploy:
