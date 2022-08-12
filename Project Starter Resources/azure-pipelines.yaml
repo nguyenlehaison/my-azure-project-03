@@ -37,7 +37,7 @@ stages:
           terraform init
           terraform plan
           terraform apply -auto-approve
-        workingDirectory: './terraform'
+    #     workingDirectory: './terraform'
     # Needed for Terraform VM deployment
     # - task: InstallSSHKey@0
     #   inputs:
@@ -54,6 +54,12 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
       displayName: 'Upload Package'
       artifact: drop-fakerestapi
+
+    - task: Destroy Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          terraform destroy
     # - task: PublishPipelineArtifact@1
     #   inputs:
     #     targetPath: './/automatedtesting'
