@@ -37,6 +37,18 @@ stages:
           pwd
           ls
           git remote -v
+          git fetch
+          git pull
+        workingDirectory: $(projectRoot)
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          pwd
+          ls
+          git remote -v
+          git fetch
+          git pull
           terraform --version
           terraform init
           terraform plan
