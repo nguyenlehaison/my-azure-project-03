@@ -148,7 +148,6 @@ stages:
     environment:
       name:  'hsonnlEnv'
       resourceName: 'hsonnlVM'
-      tags: 'web'
     strategy:
       runOnce:
         deploy:
