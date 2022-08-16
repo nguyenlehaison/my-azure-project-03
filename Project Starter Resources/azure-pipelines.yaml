@@ -36,11 +36,11 @@ stages:
         script: |
           pwd
           ls
+          git remote -v
           terraform --version
           terraform init
           terraform plan
           terraform apply -auto-approve
-          terraform destroy
         workingDirectory: $(projectRoot)
     # Needed for Terraform VM deployment
     # - task: InstallSSHKey@0
