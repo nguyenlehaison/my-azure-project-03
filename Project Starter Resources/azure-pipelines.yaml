@@ -39,6 +39,7 @@ stages:
           git remote -v
           git fetch
           git pull origin master
+          cd ./Project Starter Resources
           ls
         workingDirectory: $(projectRoot)
     - task: Bash@3
