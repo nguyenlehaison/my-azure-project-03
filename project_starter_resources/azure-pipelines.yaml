@@ -48,14 +48,11 @@ stages:
           terraform init
           terraform plan
           terraform apply -auto-approve
-        workingDirectory: $(projectRoot)/project_starter_resources/terraform/
+        workingDirectory: ./terraform
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
-        script: |
-            pwd
-            ls
-        rootFolderOrFile: './project_starter_resources/automatedtesting/jmeter/fakerestapi'
+        rootFolderOrFile: './automatedtesting/jmeter/fakerestapi'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
@@ -74,7 +71,7 @@ stages:
         targetPath: './/automatedtesting'
         artifact: 'automatedtesting'
         publishLocation: 'pipeline'
-        workingDirectory: $(projectRoot)/project_starter_resources/
+        workingDirectory: $(projectRoot)
 
   # - job: Postman
   #   pool:
