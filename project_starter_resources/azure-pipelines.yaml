@@ -52,6 +52,9 @@ stages:
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
+        script: |
+            pwd
+            ls
         rootFolderOrFile: './project_starter_resources/automatedtesting/jmeter/fakerestapi'
         includeRootFolder: false
         archiveType: 'zip'
