@@ -35,11 +35,9 @@ stages:
         targetType: 'inline'
         script: |
           pwd
-          ls
           git remote -v
           git fetch
           git pull origin master
-          cd project_starter_resources/
           ls
         workingDirectory: $(projectRoot)
     - task: Bash@3
@@ -51,28 +49,30 @@ stages:
           terraform plan
           terraform apply -auto-approve
         workingDirectory: $(projectRoot)/project_starter_resources/terraform/
-    # Needed for Terraform VM deployment
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive FakeRestAPI'
-    #   inputs:
-    #     rootFolderOrFile: './automatedtesting/jmeter/fakerestapi'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-    #   displayName: 'Upload Package'
-    #   artifact: drop-fakerestapi
-
-    - task: Bash@3
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
       inputs:
-        targetType: 'inline'
-        script: |
-          terraform destroy
-    # - task: PublishPipelineArtifact@1
+        rootFolderOrFile: './automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+        workingDirectory: $(projectRoot)/project_starter_resources/
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package'
+      artifact: drop-fakerestapi
+
+    # - task: Bash@3
     #   inputs:
-    #     targetPath: './/automatedtesting'
-    #     artifact: 'automatedtesting'
-    #     publishLocation: 'pipeline'
+    #     targetType: 'inline'
+    #     script: |
+    #       terraform destroy
+    #     workingDirectory: $(projectRoot)/project_starter_resources/terraform/
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: './/automatedtesting'
+        artifact: 'automatedtesting'
+        publishLocation: 'pipeline'
+        workingDirectory: $(projectRoot)/project_starter_resources/
 
   # - job: Postman
   #   pool:
