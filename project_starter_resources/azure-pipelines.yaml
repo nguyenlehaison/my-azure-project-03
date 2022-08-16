@@ -104,7 +104,7 @@ stages:
       name: 'hsonnlAgentPoolScaleSet'
     environment:
       name:  'hsonnlEnvScaleSet'
-      resourceName: 'az03VMscaleSet'
+      resourceName: 'hsonnlLinuxVMScaleSet'
     strategy:
       runOnce:
         deploy:
