@@ -138,31 +138,31 @@ stages:
                 sudo apt-get update -y
                 sudo apt-get install -y python-taurus
 
-          # - task: JMeterInstaller@0
-          #   inputs:
-          #     jmeterVersion: '5.4.2'
-          # - task: TaurusInstaller@0
-          #   inputs:
-          #     taurusVersion: '1.15.3'
-          #     pythonCommand: 'python3'
-          # - task: TaurusRunner@0
-          #   inputs:
-          #     taurusConfig: |
-          #       execution:
-          #       - scenario:
-          #           # You can also reference a JMeter test plan (recommended)
-          #           script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
-          #         concurrency: 5
-          #         iterations: 10
-          #         ramp-up: 2s
+          - task: JMeterInstaller@0
+            inputs:
+              jmeterVersion: '5.4.2'
+          - task: TaurusInstaller@0
+            inputs:
+              taurusVersion: '1.15.3'
+              pythonCommand: 'python3'
+          - task: TaurusRunner@0
+            inputs:
+              taurusConfig: |
+                execution:
+                - scenario:
+                    # You can also reference a JMeter test plan (recommended)
+                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+                  concurrency: 5
+                  iterations: 10
+                  ramp-up: 2s
                 
-          #       reporting:
-          #       - module: junit-xml
-          #         filename: taurus-output/TEST-Taurus.xml
-          #     jmeterHome: '$(JMeterInstaller.JMeterHome)'
-          #     jmeterPath: '$(JMeterInstaller.JMeterPath)'
-          #     jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-          #     outputDir: 'taurus-output'
+                reporting:
+                - module: junit-xml
+                  filename: taurus-output/TEST-Taurus.xml
+              jmeterHome: '$(JMeterInstaller.JMeterHome)'
+              jmeterPath: '$(JMeterInstaller.JMeterPath)'
+              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+              outputDir: 'taurus-output'
   - deployment: VMDeploy
     displayName: web
     environment:
