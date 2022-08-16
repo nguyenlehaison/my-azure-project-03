@@ -99,25 +99,46 @@ stages:
        failTaskOnFailedTests: false
 - stage: Deployment
   jobs:
-  # - deployment: FakeRestAPI
-  #   pool:
-  #     name: $(poolName)
-  #     vmImage: $(vmImageName)
-  #   environment:
-  #     name:  'hsonnlEnv'
-  #     resourceName: 'hsonnlVM'
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - task: AzureWebApp@1
-  #           displayName: 'Deploy Azure Web App'
-  #           inputs:
-  #             azureSubscription: $(azureServiceConnectionId)
-  #             appType: 'webApp'
-  #             appName: $(webAppName)
-  #             package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-  #             deploymentMethod: 'auto'
+  - deployment: FakeRestAPI
+    pool:
+      name: $(poolName)
+      vmImage: $(vmImageName)
+    environment:
+      name:  'hsonnlEnv'
+      resourceName: 'hsonnlVM'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appType: 'webApp'
+              appName: $(webAppName)
+              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+              deploymentMethod: 'auto'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # install JMeterInstaller
+                apt-get update -y
+                apt-get install openjdk-8-jdk -y
+                java -version
+                apt-get install apache2 -y
+                systemctl start apache2
+                systemctl enable apache2
+                wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.zip
+                unzip apache-jmeter-5.3.zip
+            - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # install TaurusInstaller
+                sudo apt-get update -y
+                sudo apt-get install -y python-taurus
+
           # - task: JMeterInstaller@0
           #   inputs:
           #     jmeterVersion: '5.4.2'
@@ -125,24 +146,24 @@ stages:
           #   inputs:
           #     taurusVersion: '1.15.3'
           #     pythonCommand: 'python3'
-          # - task: TaurusRunner@0
-          #   inputs:
-          #     taurusConfig: |
-          #       execution:
-          #       - scenario:
-          #           # You can also reference a JMeter test plan (recommended)
-          #           script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
-          #         concurrency: 5
-          #         iterations: 10
-          #         ramp-up: 2s
+          - task: TaurusRunner@0
+            inputs:
+              taurusConfig: |
+                execution:
+                - scenario:
+                    # You can also reference a JMeter test plan (recommended)
+                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+                  concurrency: 5
+                  iterations: 10
+                  ramp-up: 2s
                 
-          #       reporting:
-          #       - module: junit-xml
-          #         filename: taurus-output/TEST-Taurus.xml
-          #     jmeterHome: '$(JMeterInstaller.JMeterHome)'
-          #     jmeterPath: '$(JMeterInstaller.JMeterPath)'
-          #     jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-          #     outputDir: 'taurus-output'
+                reporting:
+                - module: junit-xml
+                  filename: taurus-output/TEST-Taurus.xml
+              jmeterHome: '$(JMeterInstaller.JMeterHome)'
+              jmeterPath: '$(JMeterInstaller.JMeterPath)'
+              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+              outputDir: 'taurus-output'
   - deployment: VMDeploy
     displayName: web
     environment:
