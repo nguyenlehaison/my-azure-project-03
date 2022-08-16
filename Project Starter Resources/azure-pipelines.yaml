@@ -30,16 +30,6 @@ stages:
       name: $(poolName)
       vmImage: $(vmImageName)
     steps:
-    - task: DownloadSecureFile@1
-        name: tfvardef
-        displayName: Download terraform.tfvars
-        inputs:
-          secureFile: 'terraform.tfvars'
-    - task: InstallSSHKey@0
-      inputs:
-        knownHostsEntry: '~/.ssh/id_rsa.pub'
-        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAcdicLU8rpxOM8eWGgXE0Qn37cRLou0STujKTWIkIIfwev00fh+o5qetaH3KbMv9htcfMyF0mJG5ONo5JZjSx/t/EUg2zJGwKtLRUqxhgzUCbUjzerZvecjRbw7+5z4NxWsF0/oivgb9rprEJa+zSKqgIlFVGxFr71fm39x9EjRDH01d/DNenUd+VcrQFnO6iw/0jVkieNr22ysqbM+YpaYHIB7jnFz06kRfG+z/y4BSbNXDGVU6EaIOZm3FuUehqG7aAtHhwJLeySk0XH5s8P+RsqDkHO3ZTLGoyhQkiJZhf00/ktCqVFulj/aCpGBh0pkVDXFNdbyknLZCZPTaedDvPOK9b7c84hYTSU/X4ZP5Znlq7JyOCRdWTUir2tAeR4IowcwWmbUTWDzUiN4FakwJkauICjUcIsVlucQizVOqzt+KfhtG50PL/a0/XTDY+r0bL5+Xx1Xzmv9AhGZqkKJW5s5YqBDc7XemADEPh+H8EfuAVcS9MHfi1C9zsFrk= hsonnl@hsonnlVM'
-        sshKeySecureFile: 'id_rsa'
     - task: Bash@3
       inputs:
         targetType: 'inline'
