@@ -37,10 +37,10 @@ stages:
           pwd
           ls
           terraform --version
-          # terraform init
+          terraform init
           # terraform plan
           # terraform apply -auto-approve
-        # workingDirectory: $(projectRoot)
+        workingDirectory: $(projectRoot)
     # Needed for Terraform VM deployment
     # - task: InstallSSHKey@0
     #   inputs:
