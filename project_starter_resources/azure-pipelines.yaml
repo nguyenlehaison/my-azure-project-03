@@ -173,6 +173,7 @@ stages:
                 # Run selenium
                 
                 git clone https://github.com/nguyenlehaison/my-azure-project-03.git
+                cd ./my-azure-project-03/
                 git pull
                 cd ./automatedtesting/selenium/
                 python3.7 login.py
