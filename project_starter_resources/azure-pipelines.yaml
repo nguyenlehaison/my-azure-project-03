@@ -177,4 +177,4 @@ stages:
                 cd ./my-azure-project-03/
                 git pull
                 cd ./automatedtesting/selenium/
-                python3.7 login.py
+                python3 login.py
