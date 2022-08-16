@@ -97,121 +97,15 @@ stages:
        testResultsFiles: '**/*.xml'
        mergeTestResults: true
        failTaskOnFailedTests: false
-- stage:
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
-    environment:
-      name:  'hsonnlEnv'
-      resourceType: 'hsonnlVM'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'Azure for Students (4c298133-8bec-4ca0-94e5-9c0ba696cc54)'
-              appType: 'webApp'
-              appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-              deploymentMethod: 'auto'
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.2'
-          - task: TaurusInstaller@0
-            inputs:
-              taurusVersion: '1.15.3'
-              pythonCommand: 'python3'
-          - task: TaurusRunner@0
-            inputs:
-              taurusConfig: |
-                execution:
-                - scenario:
-                    # You can also reference a JMeter test plan (recommended)
-                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
-                  concurrency: 5
-                  iterations: 10
-                  ramp-up: 2s
-                
-                reporting:
-                - module: junit-xml
-                  filename: taurus-output/TEST-Taurus.xml
-              jmeterHome: '$(JMeterInstaller.JMeterHome)'
-              jmeterPath: '$(JMeterInstaller.JMeterPath)'
-              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-              outputDir: 'taurus-output'
-  - deployment: VMDeploy
-    displayName: web
-    environment:
-      name:  'hsonnlEnv'
-      resourceType: 'hsonnlVM'
-      tags: 'web'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                #! /bin/bash
-                
-                sudo apt-get upgrade -y
-                sudo apt-get install python3 -y
-                sudo apt-get install python3-pip -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                sudo apt-get install chromium-chromedriver -y
-                pip3 install selenium
-                echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
-                source ~/.bash_profile
-                
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # Run selenium
-                
-                git clone https://github.com/ngvbach2000/Project-Starter-Resources.git
-                cd Project-Starter-Resources
-                git pull
-                cd automatedtesting/selenium
-                python3 login.py
-##########################
-# stages:
-# - stage: Build
-#   jobs:
-#   - job: Build
-#     pool:
-#       name: $(poolName)
-#       vmImage: $(vmImageName)
-#     steps:
-#     # Needed for Terraform VM deployment
-#     # - task: InstallSSHKey@0
-#     #   inputs:
-#     #     knownHostsEntry: 'KNOWN_HOSTS_STRING'
-#     #     sshPublicKey: 'PUBLIC_KEY'
-#     #     sshKeySecureFile: 'id_rsa'
-#     - task: ArchiveFiles@2
-#       displayName: 'Archive FakeRestAPI'
-#       inputs:
-#         rootFolderOrFile: 'path/to/fakerestapi'
-#         includeRootFolder: false
-#         archiveType: 'zip'
-#         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-#       displayName: 'Upload Package'
-#       artifact: drop-fakerestapi
 # - stage:
 #   jobs:
 #   - deployment: FakeRestAPI
 #     pool:
 #       name: $(poolName)
 #       vmImage: $(vmImageName)
-#     environment: 'TEST'
+#     environment:
+#       name:  'hsonnlEnv'
+#       resourceType: 'hsonnlVM'
 #     strategy:
 #       runOnce:
 #         deploy:
@@ -219,31 +113,70 @@ stages:
 #           - task: AzureWebApp@1
 #             displayName: 'Deploy Azure Web App'
 #             inputs:
-#               azureSubscription: ''
-#               appName: ''
-#               appType: webApp
-#               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-#   # - deployment: VMDeploy
-#   #   displayName: NAME
-#   #   environment:
-#   #     name:  ENVIRONMENT NAME
-#   #     resourceType: VirtualMachine
-#   #     tags: TAG NAME
-#   #   strategy:
-#   #     runOnce:
-#   #       deploy:
-#   #         steps:
-#   #         - task: Bash@3
-#   #           inputs:
-#   #             targetType: 'inline'
-#   #             script: |
-#   #               #! /bin/bash
+#               azureSubscription: 'Azure for Students (4c298133-8bec-4ca0-94e5-9c0ba696cc54)'
+#               appType: 'webApp'
+#               appName: $(webAppName)
+#               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+#               deploymentMethod: 'auto'
+#           - task: JMeterInstaller@0
+#             inputs:
+#               jmeterVersion: '5.4.2'
+#           - task: TaurusInstaller@0
+#             inputs:
+#               taurusVersion: '1.15.3'
+#               pythonCommand: 'python3'
+#           - task: TaurusRunner@0
+#             inputs:
+#               taurusConfig: |
+#                 execution:
+#                 - scenario:
+#                     # You can also reference a JMeter test plan (recommended)
+#                     script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+#                   concurrency: 5
+#                   iterations: 10
+#                   ramp-up: 2s
                 
-#   #               sudo apt-get upgrade -y
-#   #               sudo apt-get install python3-pip -y
-#   #               sudo apt-get install unzip -y
-#   #               sudo apt-get install -y chromium-browser
-#   #               pip3 install selenium
-#   #               export PATH=$PATH:some/path
-
-
+#                 reporting:
+#                 - module: junit-xml
+#                   filename: taurus-output/TEST-Taurus.xml
+#               jmeterHome: '$(JMeterInstaller.JMeterHome)'
+#               jmeterPath: '$(JMeterInstaller.JMeterPath)'
+#               jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+#               outputDir: 'taurus-output'
+#   - deployment: VMDeploy
+#     displayName: web
+#     environment:
+#       name:  'hsonnlEnv'
+#       resourceType: 'hsonnlVM'
+#       tags: 'web'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 #! /bin/bash
+                
+#                 sudo apt-get upgrade -y
+#                 sudo apt-get install python3 -y
+#                 sudo apt-get install python3-pip -y
+#                 sudo apt-get install unzip -y
+#                 sudo apt-get install -y chromium-browser
+#                 sudo apt-get install chromium-chromedriver -y
+#                 pip3 install selenium
+#                 echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
+#                 source ~/.bash_profile
+                
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 # Run selenium
+                
+#                 git clone https://github.com/ngvbach2000/Project-Starter-Resources.git
+#                 cd Project-Starter-Resources
+#                 git pull
+#                 cd automatedtesting/selenium
+#                 python3 login.py
