@@ -39,7 +39,7 @@ stages:
           git remote -v
           git fetch
           git pull origin master
-          cd ./project_starter_resources
+          cd project_starter_resources/
           ls
         workingDirectory: $(projectRoot)
     - task: Bash@3
@@ -50,7 +50,7 @@ stages:
           terraform init
           terraform plan
           terraform apply -auto-approve
-        workingDirectory: $(projectRoot)
+        workingDirectory: $(projectRoot)/project_starter_resources
     # Needed for Terraform VM deployment
     # - task: ArchiveFiles@2
     #   displayName: 'Archive FakeRestAPI'
