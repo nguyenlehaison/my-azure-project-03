@@ -101,7 +101,7 @@ stages:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      name: 'hsonnlAgentPoolScaleSet'
+      name: 'hsonnlAgentVMScaleSet'
     environment:
       name:  'hsonnlEnvScaleSet'
       resourceName: 'hsonnlLinuxVMScaleSet'
