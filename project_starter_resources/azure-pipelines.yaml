@@ -102,6 +102,9 @@ stages:
   - deployment: FakeRestAPI
     pool:
       name: 'hsonnlAgentPoolScaleSet'
+    environment:
+      name:  'hsonnlEnvScaleSet'
+      resourceName: 'az03VMscaleSet'
     strategy:
       runOnce:
         deploy:
