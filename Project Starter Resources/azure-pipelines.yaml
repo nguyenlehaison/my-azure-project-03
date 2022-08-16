@@ -33,7 +33,7 @@ stages:
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: '~/.ssh/id_rsa.pub'
-        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFtZdtHxlP5HqadJdoiIKOERXfI34W1RAN2JMss2S8dhzZdlatt8acW90PCJf+nSrMQCP6VrExA6xr857vNAq+Ho7cxrlz0UTz/3J853XUSLUatgjtFbLhA3eWKCCbrwfUmk6wlWKuQJpr+b/48Pq/tUOUcxxe+W5anwX+iP55t8K4eTQHGYJzbjyVKpkn/zWNhPqiF3/Hw8uvzQ9OgtR3N7x+rVvEj2AlWsYImvECG7KWlX1VNQ9jSj6Vldf61zLCTgzqQFbwfON7VPxxrfg77HZJUwbRfv2L8Xhv6Doke1Agkyw0O7X+5s2xZngEV6As/gDBUeDXuk436lmu61wZEUM8rMH9mDi4lrhzVALJUDZLt6IkoE59cc4oFgar24pxG9XrNmi8LnEjdHJLbzJXENcg++N7sPOv6uDEQKz6ScFkzShhEXIU5deMX8UPT2ftQG12UylIKOP+3Ut2Tb+zNx3GIRtQZGG+zetbcua5xDwnS4f8P563cYmzRpOyQ8U= ngvba@UshioMini'
+        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAcdicLU8rpxOM8eWGgXE0Qn37cRLou0STujKTWIkIIfwev00fh+o5qetaH3KbMv9htcfMyF0mJG5ONo5JZjSx/t/EUg2zJGwKtLRUqxhgzUCbUjzerZvecjRbw7+5z4NxWsF0/oivgb9rprEJa+zSKqgIlFVGxFr71fm39x9EjRDH01d/DNenUd+VcrQFnO6iw/0jVkieNr22ysqbM+YpaYHIB7jnFz06kRfG+z/y4BSbNXDGVU6EaIOZm3FuUehqG7aAtHhwJLeySk0XH5s8P+RsqDkHO3ZTLGoyhQkiJZhf00/ktCqVFulj/aCpGBh0pkVDXFNdbyknLZCZPTaedDvPOK9b7c84hYTSU/X4ZP5Znlq7JyOCRdWTUir2tAeR4IowcwWmbUTWDzUiN4FakwJkauICjUcIsVlucQizVOqzt+KfhtG50PL/a0/XTDY+r0bL5+Xx1Xzmv9AhGZqkKJW5s5YqBDc7XemADEPh+H8EfuAVcS9MHfi1C9zsFrk= hsonnl@hsonnlVM'
         sshKeySecureFile: 'id_rsa'
     - task: Bash@3
       inputs:
