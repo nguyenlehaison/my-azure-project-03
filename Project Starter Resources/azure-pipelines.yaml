@@ -30,6 +30,11 @@ stages:
       name: $(poolName)
       vmImage: $(vmImageName)
     steps:
+    - task: DownloadSecureFile@1
+        name: tfvardef
+        displayName: Download terraform.tfvars
+        inputs:
+          secureFile: 'terraform.tfvars'
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: '~/.ssh/id_rsa.pub'
