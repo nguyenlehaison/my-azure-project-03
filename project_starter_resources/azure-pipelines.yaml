@@ -50,7 +50,7 @@ stages:
           terraform init
           terraform plan
           terraform apply -auto-approve
-        workingDirectory: $(projectRoot)/project_starter_resources
+        workingDirectory: $(projectRoot)/project_starter_resources/terraform/
     # Needed for Terraform VM deployment
     # - task: ArchiveFiles@2
     #   displayName: 'Archive FakeRestAPI'
