@@ -30,6 +30,11 @@ stages:
       name: $(poolName)
       vmImage: $(vmImageName)
     steps:
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/id_rsa.pub'
+        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFtZdtHxlP5HqadJdoiIKOERXfI34W1RAN2JMss2S8dhzZdlatt8acW90PCJf+nSrMQCP6VrExA6xr857vNAq+Ho7cxrlz0UTz/3J853XUSLUatgjtFbLhA3eWKCCbrwfUmk6wlWKuQJpr+b/48Pq/tUOUcxxe+W5anwX+iP55t8K4eTQHGYJzbjyVKpkn/zWNhPqiF3/Hw8uvzQ9OgtR3N7x+rVvEj2AlWsYImvECG7KWlX1VNQ9jSj6Vldf61zLCTgzqQFbwfON7VPxxrfg77HZJUwbRfv2L8Xhv6Doke1Agkyw0O7X+5s2xZngEV6As/gDBUeDXuk436lmu61wZEUM8rMH9mDi4lrhzVALJUDZLt6IkoE59cc4oFgar24pxG9XrNmi8LnEjdHJLbzJXENcg++N7sPOv6uDEQKz6ScFkzShhEXIU5deMX8UPT2ftQG12UylIKOP+3Ut2Tb+zNx3GIRtQZGG+zetbcua5xDwnS4f8P563cYmzRpOyQ8U= ngvba@UshioMini'
+        sshKeySecureFile: 'id_rsa'
     - task: Bash@3
       inputs:
         targetType: 'inline'
@@ -51,11 +56,6 @@ stages:
           terraform apply -auto-approve
         workingDirectory: $(projectRoot)
     # Needed for Terraform VM deployment
-    # - task: InstallSSHKey@0
-    #   inputs:
-    #     knownHostsEntry: '~/.ssh/id_rsa.pub'
-    #     sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFtZdtHxlP5HqadJdoiIKOERXfI34W1RAN2JMss2S8dhzZdlatt8acW90PCJf+nSrMQCP6VrExA6xr857vNAq+Ho7cxrlz0UTz/3J853XUSLUatgjtFbLhA3eWKCCbrwfUmk6wlWKuQJpr+b/48Pq/tUOUcxxe+W5anwX+iP55t8K4eTQHGYJzbjyVKpkn/zWNhPqiF3/Hw8uvzQ9OgtR3N7x+rVvEj2AlWsYImvECG7KWlX1VNQ9jSj6Vldf61zLCTgzqQFbwfON7VPxxrfg77HZJUwbRfv2L8Xhv6Doke1Agkyw0O7X+5s2xZngEV6As/gDBUeDXuk436lmu61wZEUM8rMH9mDi4lrhzVALJUDZLt6IkoE59cc4oFgar24pxG9XrNmi8LnEjdHJLbzJXENcg++N7sPOv6uDEQKz6ScFkzShhEXIU5deMX8UPT2ftQG12UylIKOP+3Ut2Tb+zNx3GIRtQZGG+zetbcua5xDwnS4f8P563cYmzRpOyQ8U= ngvba@UshioMini'
-    #     sshKeySecureFile: 'id_rsa'
     # - task: ArchiveFiles@2
     #   displayName: 'Archive FakeRestAPI'
     #   inputs:
