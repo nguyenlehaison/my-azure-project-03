@@ -99,25 +99,25 @@ stages:
        failTaskOnFailedTests: false
 - stage: Deployment
   jobs:
-  - deployment: FakeRestAPI
-    pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
-    environment:
-      name:  'hsonnlEnv'
-      resourceName: 'hsonnlVM'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appType: 'webApp'
-              appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-              deploymentMethod: 'auto'
+  # - deployment: FakeRestAPI
+  #   pool:
+  #     name: $(poolName)
+  #     vmImage: $(vmImageName)
+  #   environment:
+  #     name:  'hsonnlEnv'
+  #     resourceName: 'hsonnlVM'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - task: AzureWebApp@1
+  #           displayName: 'Deploy Azure Web App'
+  #           inputs:
+  #             azureSubscription: $(azureServiceConnectionId)
+  #             appType: 'webApp'
+  #             appName: $(webAppName)
+  #             package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+  #             deploymentMethod: 'auto'
           # - task: JMeterInstaller@0
           #   inputs:
           #     jmeterVersion: '5.4.2'
