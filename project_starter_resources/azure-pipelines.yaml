@@ -130,13 +130,13 @@ stages:
           #       systemctl enable apache2
           #       wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.zip
           #       unzip apache-jmeter-5.3.zip
-          # - task: Bash@3
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       # install TaurusInstaller
-          #       sudo apt-get update -y
-          #       sudo apt-get install -y python-taurus
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # install TaurusInstaller
+                sudo apt-get update -y
+                sudo apt-get -y install zip
 
           - task: JMeterInstaller@0
             inputs:
