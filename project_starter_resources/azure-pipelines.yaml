@@ -75,8 +75,7 @@ stages:
 
   - job: Postman
     pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
+      name: 'hsonnlAgentVMScaleSet'
     steps:
     - task: CmdLine@2
       displayName: Install Newman
