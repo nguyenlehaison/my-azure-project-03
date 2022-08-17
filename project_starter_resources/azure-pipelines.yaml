@@ -198,10 +198,10 @@ stages:
           - task: JMeterInstaller@0
             inputs:
               jmeterVersion: '5.4.2'
-          - task: TaurusInstaller@0
-            inputs:
-              taurusVersion: '1.15.3'
-              pythonCommand: 'python3'
+          # - task: TaurusInstaller@0
+          #   inputs:
+          #     taurusVersion: '1.15.3'
+          #     pythonCommand: 'python3'
           - task: TaurusRunner@0
             inputs:
               taurusConfig: |
