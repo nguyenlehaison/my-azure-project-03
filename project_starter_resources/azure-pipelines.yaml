@@ -131,10 +131,10 @@ stages:
                 # install JAVA, APACHE2
                 sudo apt-get update -y
                 sudo apt-get install openjdk-8-jdk -y
-                java -version
-                # apt-get install apache2 -y
-                # systemctl start apache2
-                # systemctl enable apache2
+                sudo java -version
+                sudo apt-get install apache2 -y
+                sudo systemctl start apache2
+                sudo systemctl enable apache2
           - task: JMeterInstaller@0
             inputs:
               jmeterVersion: '5.4.2'
