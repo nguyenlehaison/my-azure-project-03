@@ -181,7 +181,7 @@ stages:
                 # install ZIP
                 sudo apt-get update -y
                 sudo apt-get -y install zip
-                sudo apt install python3-pip
+                sudo apt install python3-pip -y
           - task: Bash@3
             inputs:
               targetType: 'inline'
