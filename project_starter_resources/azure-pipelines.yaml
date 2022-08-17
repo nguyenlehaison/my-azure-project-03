@@ -131,10 +131,10 @@ stages:
                 # install JAVA, APACHE2
                 sudo apt-get update -y
                 sudo apt-get install openjdk-8-jdk -y
-                sudo java -version
                 sudo apt-get install apache2 -y
                 sudo systemctl start apache2
                 sudo systemctl enable apache2
+                set HEAP=-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m
           - task: JMeterInstaller@0
             inputs:
               jmeterVersion: '5.4.2'
