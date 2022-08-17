@@ -97,69 +97,128 @@ stages:
        testResultsFiles: '**/*.xml'
        mergeTestResults: true
        failTaskOnFailedTests: false
+- stage: JMeterTests
+    displayName: JMeter Tests
+    jobs:
+    - job: JMETERTests
+      displayName: Test JMeter
+      pool:
+        name: 'hsonnlAgentVMScaleSet'
+      steps:
+      - bash: |
+          sudo apt-get install openjdk-11-jre-headless -y
+          java -version
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.tgz -O jmeter.tgz
+          tar xzvf jmeter.tgz
+          apache-jmeter-5.4/bin/jmeter --version
+          # create log directory
+          mkdir -p log/jmeter
+          pwd
+          ls -la
+        displayName: Install JMeter
+      - bash: |
+          apache-jmeter-5.4/bin/jmeter -n -t jmeter/StressTestSuitev2.jmx \
+                                       -l log/jmeter/stress-test-result.csv \
+                                       -e -f -o log/jmeter/stress-test-html-report \
+                                       -j log/jmeter/jmeter-stress-test.log
+        displayName: JMeter stress test
+      - bash: |
+          apache-jmeter-5.4/bin/jmeter -n -t jmeter/EnduranceTestSuitev2.jmx \
+                                       -l log/jmeter/endurance-test-result.csv \
+                                       -e -f -o log/jmeter/endurance-test-html-report \
+                                       -j log/jmeter/jmeter-endurance-test.log
+        displayName: JMeter endurance test
+      - task: ArchiveFiles@2
+        displayName: Archive JMeter stress test HTML report
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report-$(Build.BuildId).zip'
+          verbose: true
+      - task: ArchiveFiles@2
+        displayName: Archive JMeter endurance test HTML report
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report-$(Build.BuildId).zip'
+          verbose: true
+      - bash: |
+          rm -rf log/jmeter/stress-test-html-report
+          rm -rf log/jmeter/endurance-test-html-report
+          cd log/jmeter
+          pwd
+          ls -la
+        displayName: Delete original JMeter test HTML reports
+      - task: PublishPipelineArtifact@1
+        displayName: Publish JMeter logs
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/log/jmeter'
+          artifactName: 'drop-jmeter-logs'
 - stage: Deployment
   jobs:
-  - deployment: FakeRestAPI
-    pool:
-      name: 'hsonnlAgentVMScaleSet'
-    environment:
-      name:  'hsonnlEnvScaleSet'
-      resourceName: 'hsonnlLinuxVMScaleSet'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appType: 'webApp'
-              appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-              deploymentMethod: 'auto'
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # install ZIP
-                sudo apt-get update -y
-                sudo apt-get -y install zip
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # install JAVA, APACHE2
-                sudo apt-get update -y
-                sudo apt-get install openjdk-8-jdk -y
-                sudo apt-get install apache2 -y
-                sudo systemctl start apache2
-                sudo systemctl enable apache2
-                set HEAP=-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.2'
-          - task: TaurusInstaller@0
-            inputs:
-              taurusVersion: '1.15.3'
-              pythonCommand: 'python3'
-          - task: TaurusRunner@0
-            inputs:
-              taurusConfig: |
-                execution:
-                - scenario:
-                    # You can also reference a JMeter test plan (recommended)
-                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
-                  concurrency: 5
-                  iterations: 10
-                  ramp-up: 2s
+  # - deployment: FakeRestAPI
+  #   pool:
+  #     name: 'hsonnlAgentVMScaleSet'
+  #   environment:
+  #     name:  'hsonnlEnvScaleSet'
+  #     resourceName: 'hsonnlLinuxVMScaleSet'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - task: AzureWebApp@1
+  #           displayName: 'Deploy Azure Web App'
+  #           inputs:
+  #             azureSubscription: $(azureServiceConnectionId)
+  #             appType: 'webApp'
+  #             appName: $(webAppName)
+  #             package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+  #             deploymentMethod: 'auto'
+  #         - task: Bash@3
+  #           inputs:
+  #             targetType: 'inline'
+  #             script: |
+  #               # install ZIP
+  #               sudo apt-get update -y
+  #               sudo apt-get -y install zip
+  #         - task: Bash@3
+  #           inputs:
+  #             targetType: 'inline'
+  #             script: |
+  #               # install JAVA, APACHE2
+  #               sudo apt-get update -y
+  #               sudo apt-get install openjdk-8-jdk -y
+  #               sudo apt-get install apache2 -y
+  #               sudo systemctl start apache2
+  #               sudo systemctl enable apache2
+  #               set HEAP=-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m
+  #         - task: JMeterInstaller@0
+  #           inputs:
+  #             jmeterVersion: '5.4.2'
+  #         - task: TaurusInstaller@0
+  #           inputs:
+  #             taurusVersion: '1.15.3'
+  #             pythonCommand: 'python3'
+  #         - task: TaurusRunner@0
+  #           inputs:
+  #             taurusConfig: |
+  #               execution:
+  #               - scenario:
+  #                   # You can also reference a JMeter test plan (recommended)
+  #                   script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+  #                 concurrency: 5
+  #                 iterations: 10
+  #                 ramp-up: 2s
                 
-                reporting:
-                - module: junit-xml
-                  filename: taurus-output/TEST-Taurus.xml
-              jmeterHome: '$(JMeterInstaller.JMeterHome)'
-              jmeterPath: '$(JMeterInstaller.JMeterPath)'
-              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-              outputDir: 'taurus-output'
+  #               reporting:
+  #               - module: junit-xml
+  #                 filename: taurus-output/TEST-Taurus.xml
+  #             jmeterHome: '$(JMeterInstaller.JMeterHome)'
+  #             jmeterPath: '$(JMeterInstaller.JMeterPath)'
+  #             jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+  #             outputDir: 'taurus-output'
   - deployment: VMDeploy
     displayName: web
     environment:
