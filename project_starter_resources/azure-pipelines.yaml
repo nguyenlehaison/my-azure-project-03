@@ -181,7 +181,10 @@ stages:
                 # install ZIP
                 sudo apt-get update -y
                 sudo apt-get -y install zip
-                sudo apt install python3-pip -y
+                sudo apt update
+                sudo apt install python3.8-pip -y
+                python3 -v
+                pip3.8 --version
           - task: Bash@3
             inputs:
               targetType: 'inline'
@@ -198,7 +201,7 @@ stages:
           - task: TaurusInstaller@0
             inputs:
               taurusVersion: '1.15.3'
-              pythonCommand: 'python3'
+              pythonCommand: 'python3.8'
           - task: TaurusRunner@0
             inputs:
               taurusConfig: |
