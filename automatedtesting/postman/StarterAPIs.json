@@ -36,7 +36,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://dummy.restapiexample.com/api/v1/create",
+					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/create",
 					"protocol": "http",
 					"host": [
 						"dummy",
@@ -73,7 +73,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://dummy.restapiexample.com/api/v1/employees",
+					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/employees",
 					"protocol": "http",
 					"host": [
 						"dummy",
