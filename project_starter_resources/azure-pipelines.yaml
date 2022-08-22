@@ -44,6 +44,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          terraform init
           terraform destroy
         workingDirectory: ./terraform
     - task: Bash@3
