@@ -11,7 +11,7 @@ terraform {
     storage_account_name = "mystoragesccount"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
-    access_key           = "82DaorWlVaVmIPzPfloSioJiSUuSEuT64PI+jVFjyth1TEzua8xCE/AV5/h3A61M9Or5YFSHWinH+ASteCdLJg=="
+    access_key           = "OvezlmulM2yYooMoOLHSWGNwnjwHJfQ54tKaexf7PLmRkspQYwumNXv+CxIqya4H9wYv48LThk5v+ASttTMvdQ=="
   }
 }
 module "resource_group" {
