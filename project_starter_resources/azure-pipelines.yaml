@@ -44,6 +44,12 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          terraform destroy
+        workingDirectory: $(projectRoot)/project_starter_resources/terraform/
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
           terraform --version
           terraform init
           terraform plan
@@ -59,13 +65,6 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
       displayName: 'Upload Package'
       artifact: drop-fakerestapi
-
-    # - task: Bash@3
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #       terraform destroy
-    #     workingDirectory: $(projectRoot)/project_starter_resources/terraform/
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: './/automatedtesting'
