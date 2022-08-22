@@ -45,7 +45,7 @@ stages:
         targetType: 'inline'
         script: |
           terraform init
-          terraform plan -destroy
+          terraform plan
           terraform destroy -auto-approve
         workingDirectory: ./terraform
     - task: Bash@3
