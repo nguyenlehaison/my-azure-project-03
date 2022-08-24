@@ -183,7 +183,7 @@ stages:
                 git pull
                 cd ./automatedtesting/selenium/
                 python3 login.py
-- stages: Postman
+- stage: Postman
   - job: Postman
       pool:
         name: $(poolName)
