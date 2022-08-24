@@ -37,7 +37,7 @@
 				},
 				"url": {
 					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/create",
-					"protocol": "http",
+					"protocol": "https",
 					"host": [
 						"hsonnlappservice",
 						"azurewebsites",
@@ -74,7 +74,7 @@
 				"header": [],
 				"url": {
 					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/employees",
-					"protocol": "http",
+					"protocol": "https",
 					"host": [
 						"hsonnlappservice",
 						"azurewebsites",

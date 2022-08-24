@@ -163,11 +163,11 @@ stages:
                 
                 reporting:
                 - module: junit-xml
-                  filename: my-taurus-output/TEST-Taurus.xml
+                  filename: my-taurus-output-2/TEST-Taurus.xml
               jmeterHome: '$(JMeterInstaller.JMeterHome)'
               jmeterPath: '$(JMeterInstaller.JMeterPath)'
               jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-              outputDir: 'my-taurus-output'
+              outputDir: 'my-taurus-output-2'
           - task: Bash@3
             inputs:
               targetType: 'inline'
