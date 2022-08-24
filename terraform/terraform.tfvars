@@ -6,7 +6,7 @@ tenant_id       = "f0a8fb89-5ac0-4c80-beb9-50e2b0513d7a"
 
 # Resource Group/Location
 location         = "Japan East"
-resource_group   = "hsonnlRGtest"
+resource_group   = "hsonnlRGtest1"
 application_type = "web"
 
 # Network
