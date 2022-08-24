@@ -205,7 +205,7 @@ stages:
     - task: PublishTestResults@2
       displayName: 'Publish Test Results for postman'
       inputs:
-      testResultsFormat: 'JUnit'
-      testResultsFiles: '**/*.xml'
-      mergeTestResults: true
-      failTaskOnFailedTests: false
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/*.xml'
+        mergeTestResults: true
+        failTaskOnFailedTests: false
