@@ -39,9 +39,9 @@
 					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/create",
 					"protocol": "http",
 					"host": [
-						"dummy",
-						"restapiexample",
-						"com"
+						"hsonnlappservice",
+						"azurewebsites",
+						"net"
 					],
 					"path": [
 						"api",
@@ -76,9 +76,9 @@
 					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/employees",
 					"protocol": "http",
 					"host": [
-						"dummy",
-						"restapiexample",
-						"com"
+						"hsonnlappservice",
+						"azurewebsites",
+						"net"
 					],
 					"path": [
 						"api",
