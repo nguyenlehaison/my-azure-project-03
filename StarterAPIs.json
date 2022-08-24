@@ -36,10 +36,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/create",
+					"raw": "https://hsonnlasweb.azurewebsites.net/api/v1/create",
 					"protocol": "https",
 					"host": [
-						"hsonnlappservice",
+						"hsonnlasweb",
 						"azurewebsites",
 						"net"
 					],
@@ -73,10 +73,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://hsonnlappservice.azurewebsites.net/api/v1/employees",
+					"raw": "https://hsonnlasweb.azurewebsites.net/api/v1/employees",
 					"protocol": "https",
 					"host": [
-						"hsonnlappservice",
+						"hsonnlasweb",
 						"azurewebsites",
 						"net"
 					],
