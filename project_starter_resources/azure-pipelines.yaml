@@ -58,6 +58,11 @@ stages:
           terraform plan
           terraform apply -auto-approve
         workingDirectory: ./terraform
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: '~/.ssh/id_rsa.pub'
+        sshPublicKey: 'ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAcdicLU8rpxOM8eWGgXE0Qn37cRLou0STujKTWIkIIfwev00fh+o5qetaH3KbMv9htcfMyF0mJG5ONo5JZjSx/t/EUg2zJGwKtLRUqxhgzUCbUjzerZvecjRbw7+5z4NxWsF0/oivgb9rprEJa+zSKqgIlFVGxFr71fm39x9EjRDH01d/DNenUd+VcrQFnO6iw/0jVkieNr22ysqbM+YpaYHIB7jnFz06kRfG+z/y4BSbNXDGVU6EaIOZm3FuUehqG7aAtHhwJLeySk0XH5s8P+RsqDkHO3ZTLGoyhQkiJZhf00/ktCqVFulj/aCpGBh0pkVDXFNdbyknLZCZPTaedDvPOK9b7c84hYTSU/X4ZP5Znlq7JyOCRdWTUir2tAeR4IowcwWmbUTWDzUiN4FakwJkauICjUcIsVlucQizVOqzt+KfhtG50PL/a0/XTDY+r0bL5+Xx1Xzmv9AhGZqkKJW5s5YqBDc7XemADEPh+H8EfuAVcS9MHfi1C9zsFrk= hsonnl@hsonnlVM'
+        sshKeySecureFile: 'id_rsa'
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
@@ -74,31 +79,6 @@ stages:
         artifact: 'automatedtesting'
         publishLocation: 'pipeline'
         workingDirectory: $(projectRoot)
-
-  - job: Postman
-    pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
-    steps:
-    - task: CmdLine@2
-      displayName: Install Newman
-      inputs:
-        script: 'sudo npm install -g newman'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-    - task: CmdLine@2
-      displayName: Run Regression Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
-
-        workingDirectory: './automatedtesting/postman'
-    - task: PublishTestResults@2
-      displayName: 'Publish Test Results for postman'
-      inputs:
-       testResultsFormat: 'JUnit'
-       testResultsFiles: '**/*.xml'
-       mergeTestResults: true
-       failTaskOnFailedTests: false
 - stage: Deployment
   jobs:
   - deployment: FakeRestAPI
@@ -203,3 +183,28 @@ stages:
                 git pull
                 cd ./automatedtesting/selenium/
                 python3 login.py
+- stages: Postman
+  - job: Postman
+      pool:
+        name: $(poolName)
+        vmImage: $(vmImageName)
+      steps:
+      - task: CmdLine@2
+        displayName: Install Newman
+        inputs:
+          script: 'sudo npm install -g newman'
+          workingDirectory: $(System.DefaultWorkingDirectory)
+      - task: CmdLine@2
+        displayName: Run Regression Tests
+        continueOnError: true
+        inputs:
+          script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
+
+          workingDirectory: './automatedtesting/postman'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results for postman'
+        inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/*.xml'
+        mergeTestResults: true
+        failTaskOnFailedTests: false
