@@ -184,6 +184,7 @@ stages:
                 cd ./automatedtesting/selenium/
                 python3 login.py
 - stage: Postman
+  jobs:
   - job: Postman
       pool:
         name: $(poolName)
