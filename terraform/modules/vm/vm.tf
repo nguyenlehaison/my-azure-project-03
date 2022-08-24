@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "network" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "" {
+resource "azurerm_linux_virtual_machine" "vm" {
   name                = "vm-${var.application_type}-${var.resource_type}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
