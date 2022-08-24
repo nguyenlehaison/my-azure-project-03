@@ -168,6 +168,17 @@ stages:
               jmeterPath: '$(JMeterInstaller.JMeterPath)'
               jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
               outputDir: 'my-taurus-output'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                sudo ls
+                sudo git status
+                sudo git add .
+                sudo git status
+                sudo git commit -m "Update"
+                sudo git pull
+                sudo git push origin master
   - deployment: VMDeploy
     displayName: web
     environment:
