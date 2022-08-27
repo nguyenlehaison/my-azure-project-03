@@ -3,10 +3,10 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: '14fe3361-dbb1-459b-b7ba-234b932a0fb8'
+  azureServiceConnectionId: '5ad492c1-cb8e-424e-949c-c0b17f343564'
 
   # Web app name
-  webAppName: 'hsonnlAppService'
+  webAppName: 'hsonnlWebApp'
 
   poolName: 'hsonnlPool'
   # Agent VM image name
@@ -79,133 +79,133 @@ stages:
         artifact: 'automatedtesting'
         publishLocation: 'pipeline'
         workingDirectory: $(projectRoot)
-- stage: Deployment
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      name: 'hsonnlAgentVMScaleSet'
-    environment:
-      name:  'hsonnlEnvScaleSet'
-      resourceName: 'hsonnlLinuxVMScaleSet'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appType: 'webApp'
-              appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-              deploymentMethod: 'auto'
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # install ZIP
-                sudo apt-get update -y
-                sudo apt-get -y install zip
-                sudo apt-get -y install python3-pip
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # install JAVA, APACHE2
-                sudo apt-get update -y
-                sudo apt-get install openjdk-8-jdk -y
-                sudo apt-get install apache2 -y
-                sudo systemctl start apache2
-                sudo systemctl enable apache2
-          - task: JMeterInstaller@0
-            inputs:
-              jmeterVersion: '5.4.2'
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                sudo apt-get install python default-jre-headless python-pip python-dev libxml2-dev libxslt-dev zlib1g-dev -y
-                sudo pip install bzt
-          # - task: TaurusInstaller@0
-          #   inputs:
-          #     taurusVersion: '1.15.3'
-          #     pythonCommand: 'python3'
-          - task: TaurusRunner@0
-            inputs:
-              taurusConfig: |
-                execution:
-                - scenario:
-                    # You can also reference a JMeter test plan (recommended)
-                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
-                  concurrency: 5
-                  iterations: 10
-                  ramp-up: 2s
+# - stage: Deployment
+#   jobs:
+#   - deployment: FakeRestAPI
+#     pool:
+#       name: 'hsonnlAgentVMScaleSet'
+#     environment:
+#       name:  'hsonnlEnvScaleSet'
+#       resourceName: 'hsonnlLinuxVMScaleSet'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: AzureWebApp@1
+#             displayName: 'Deploy Azure Web App'
+#             inputs:
+#               azureSubscription: $(azureServiceConnectionId)
+#               appType: 'webApp'
+#               appName: $(webAppName)
+#               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+#               deploymentMethod: 'auto'
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 # install ZIP
+#                 sudo apt-get update -y
+#                 sudo apt-get -y install zip
+#                 sudo apt-get -y install python3-pip
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 # install JAVA, APACHE2
+#                 sudo apt-get update -y
+#                 sudo apt-get install openjdk-8-jdk -y
+#                 sudo apt-get install apache2 -y
+#                 sudo systemctl start apache2
+#                 sudo systemctl enable apache2
+#           - task: JMeterInstaller@0
+#             inputs:
+#               jmeterVersion: '5.4.2'
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 sudo apt-get install python default-jre-headless python-pip python-dev libxml2-dev libxslt-dev zlib1g-dev -y
+#                 sudo pip install bzt
+#           # - task: TaurusInstaller@0
+#           #   inputs:
+#           #     taurusVersion: '1.15.3'
+#           #     pythonCommand: 'python3'
+#           - task: TaurusRunner@0
+#             inputs:
+#               taurusConfig: |
+#                 execution:
+#                 - scenario:
+#                     # You can also reference a JMeter test plan (recommended)
+#                     script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+#                   concurrency: 5
+#                   iterations: 10
+#                   ramp-up: 2s
                 
-                reporting:
-                - module: junit-xml
-                  filename: my-taurus-output-2/TEST-Taurus.xml
-              jmeterHome: '$(JMeterInstaller.JMeterHome)'
-              jmeterPath: '$(JMeterInstaller.JMeterPath)'
-              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-              outputDir: 'my-taurus-output-2'
-  - deployment: VMDeploy
-    displayName: web
-    environment:
-      name:  'hsonnlEnv'
-      resourceName: 'hsonnlVM'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                #! /bin/bash
+#                 reporting:
+#                 - module: junit-xml
+#                   filename: my-taurus-output-2/TEST-Taurus.xml
+#               jmeterHome: '$(JMeterInstaller.JMeterHome)'
+#               jmeterPath: '$(JMeterInstaller.JMeterPath)'
+#               jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+#               outputDir: 'my-taurus-output-2'
+#   - deployment: VMDeploy
+#     displayName: web
+#     environment:
+#       name:  'hsonnlEnv'
+#       resourceName: 'hsonnlVM'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 #! /bin/bash
                 
-                sudo apt-get upgrade -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                sudo apt-get install chromium-chromedriver -y
-                pip3 install selenium
-                pip install selenium
-                echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
-                source ~/.bash_profile
+#                 sudo apt-get upgrade -y
+#                 sudo apt-get install unzip -y
+#                 sudo apt-get install -y chromium-browser
+#                 sudo apt-get install chromium-chromedriver -y
+#                 pip3 install selenium
+#                 pip install selenium
+#                 echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
+#                 source ~/.bash_profile
                 
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # Run selenium
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: |
+#                 # Run selenium
                 
-                git clone https://github.com/nguyenlehaison/my-azure-project-03.git
-                cd ./my-azure-project-03/
-                git pull
-                cd ./automatedtesting/selenium/
-                python3 login.py
-- stage: Postman
-  jobs:
-  - job: Postman
-    pool:
-      name: $(poolName)
-      vmImage: $(vmImageName)
-    steps:
-    - task: CmdLine@2
-      displayName: Install Newman
-      inputs:
-        script: 'sudo npm install -g newman'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-    - task: CmdLine@2
-      displayName: Run Regression Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
+#                 git clone https://github.com/nguyenlehaison/my-azure-project-03.git
+#                 cd ./my-azure-project-03/
+#                 git pull
+#                 cd ./automatedtesting/selenium/
+#                 python3 login.py
+# - stage: Postman
+#   jobs:
+#   - job: Postman
+#     pool:
+#       name: $(poolName)
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: CmdLine@2
+#       displayName: Install Newman
+#       inputs:
+#         script: 'sudo npm install -g newman'
+#         workingDirectory: $(System.DefaultWorkingDirectory)
+#     - task: CmdLine@2
+#       displayName: Run Regression Tests
+#       continueOnError: true
+#       inputs:
+#         script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
 
-        workingDirectory: './automatedtesting/postman'
-    - task: PublishTestResults@2
-      displayName: 'Publish Test Results for postman'
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/*.xml'
-        mergeTestResults: true
-        failTaskOnFailedTests: false
+#         workingDirectory: './automatedtesting/postman'
+#     - task: PublishTestResults@2
+#       displayName: 'Publish Test Results for postman'
+#       inputs:
+#         testResultsFormat: 'JUnit'
+#         testResultsFiles: '**/*.xml'
+#         mergeTestResults: true
+#         failTaskOnFailedTests: false
