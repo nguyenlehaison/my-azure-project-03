@@ -16,4 +16,4 @@ address_prefix_test  = ["10.0.0.0/24"]
 address_prefix_nsg  = "10.0.0.0/24"
 
 # App service
-app_service_name = "hsonnlAS"
+app_service_name = "hsonnl1998AS"
