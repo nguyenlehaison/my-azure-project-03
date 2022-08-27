@@ -5,7 +5,7 @@ client_secret   = "7A68Q~5GXSy0nnbVf5-ZvGZalQIUSzM2Df_Wqa7-"
 tenant_id       = "df6e20cc-1ea7-4532-a4f9-3cba97df5581"
 
 # Resource Group/Location
-location         = "Japan East"
+location         = "koreacentral"
 resource_group   = "hsonnlRGtest"
 application_type = "web"
 
