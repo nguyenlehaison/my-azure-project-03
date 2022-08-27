@@ -13,7 +13,7 @@ resource "azurerm_network_interface" "network" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "vm-${var.application_type}-${var.resource_type}"
-  location            = "${var.location}"
+  location            = "koreacentral"
   resource_group_name = "${var.resource_group}"
   size                = "Standard_B1s"
   admin_username      = "hsonnl"
