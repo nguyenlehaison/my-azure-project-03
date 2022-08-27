@@ -85,9 +85,9 @@ stages:
     pool:
       name: $(poolName)
       vmImage: $(vmImageName)
-    # environment:
-    #   name:  'hsonnlEnvScaleSet'
-    #   resourceName: 'hsonnlLinuxVMScaleSet'
+    environment:
+      name:  'hsonnlEnv'
+      resourceName: 'hsonnlVM'
     strategy:
       runOnce:
         deploy:
