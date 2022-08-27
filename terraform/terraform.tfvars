@@ -1,12 +1,12 @@
 # Azure subscription vars
-subscription_id = "ad052e3d-1f38-461b-bf11-a10d6e9c90ce"
-client_id       = "6614352c-f877-4b5c-b9ce-34b450ac6897"
-client_secret   = "eAP8Q~Eqdrgw9sWu7oDGJkhHzXcpiUPuHTfqocPA"
-tenant_id       = "f0a8fb89-5ac0-4c80-beb9-50e2b0513d7a"
+subscription_id = "afbce3b5-9b8e-48ad-8eb7-267c0906f6a9"
+client_id       = "724dfe55-0fcb-4589-ace7-99a10f29ddcb"
+client_secret   = "7A68Q~5GXSy0nnbVf5-ZvGZalQIUSzM2Df_Wqa7-"
+tenant_id       = "df6e20cc-1ea7-4532-a4f9-3cba97df5581"
 
 # Resource Group/Location
 location         = "Japan East"
-resource_group   = "hsonnlRGtest1"
+resource_group   = "hsonnlRGtest"
 application_type = "web"
 
 # Network

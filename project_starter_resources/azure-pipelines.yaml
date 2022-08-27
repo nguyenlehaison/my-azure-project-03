@@ -13,7 +13,7 @@ variables:
   vmImageName: 'hsonnlVM'
 
   # Environment name
-  environmentName: 'hsonnlEnv'
+  # environmentName: 'hsonnlEnv'
 
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
@@ -61,7 +61,7 @@ stages:
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: '~/.ssh/id_rsa.pub'
-        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAcdicLU8rpxOM8eWGgXE0Qn37cRLou0STujKTWIkIIfwev00fh+o5qetaH3KbMv9htcfMyF0mJG5ONo5JZjSx/t/EUg2zJGwKtLRUqxhgzUCbUjzerZvecjRbw7+5z4NxWsF0/oivgb9rprEJa+zSKqgIlFVGxFr71fm39x9EjRDH01d/DNenUd+VcrQFnO6iw/0jVkieNr22ysqbM+YpaYHIB7jnFz06kRfG+z/y4BSbNXDGVU6EaIOZm3FuUehqG7aAtHhwJLeySk0XH5s8P+RsqDkHO3ZTLGoyhQkiJZhf00/ktCqVFulj/aCpGBh0pkVDXFNdbyknLZCZPTaedDvPOK9b7c84hYTSU/X4ZP5Znlq7JyOCRdWTUir2tAeR4IowcwWmbUTWDzUiN4FakwJkauICjUcIsVlucQizVOqzt+KfhtG50PL/a0/XTDY+r0bL5+Xx1Xzmv9AhGZqkKJW5s5YqBDc7XemADEPh+H8EfuAVcS9MHfi1C9zsFrk= hsonnl@hsonnlVM'
+        sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQFgNczfMpJKcrXI07XfxbXfFxhqEY6p7RZ33RYpbX2zM6w7F9icesg5xP20/HfshDuNTvWMEHo3G5g0rOVtfXfH0EBPh2Fadzul5JK6Dskznz8NAI8anjKuyvjRbmV+CeJeIAGE6qRMCzJpzDLVfPcz1DIf0b/9wdinDcTZbgNDH99NRWjd9eRmuak8SVV5suqYYrBlzmrxNYBoF2CJQoGjuDBp4fWgH1Qmt2a814jP++eVLEcVrhXlODyDLxrxmN5UFu10HytGJcGQi6sefclTEKf580dtek6bLOrL+jTQb7BLZFC43d5bnXmileB0fUB5OYwv+nn+r5FsafpR4Q/KbVNSSX6GDkBOK5nRgUUkPFMID5mK+8Evu+0heANmX9i4DMUVirIqaDdetGo+enacJ0rET2tdf22mtBBeQ1i8HW2tWm/9a38tDwoYf9kx0n7bBec/gK+erM+x1UBsqZ7PZgiF/CccN4H1q5iPwLGupzr5STixdxPhx/qhgZOrk= hsonnl@hsonnlVM'
         sshKeySecureFile: 'id_rsa'
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
