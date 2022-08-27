@@ -79,75 +79,76 @@ stages:
         artifact: 'automatedtesting'
         publishLocation: 'pipeline'
         workingDirectory: $(projectRoot)
-# - stage: Deployment
-#   jobs:
-#   - deployment: FakeRestAPI
-#     pool:
-#       name: 'hsonnlAgentVMScaleSet'
-#     environment:
-#       name:  'hsonnlEnvScaleSet'
-#       resourceName: 'hsonnlLinuxVMScaleSet'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy Azure Web App'
-#             inputs:
-#               azureSubscription: $(azureServiceConnectionId)
-#               appType: 'webApp'
-#               appName: $(webAppName)
-#               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-#               deploymentMethod: 'auto'
-#           - task: Bash@3
-#             inputs:
-#               targetType: 'inline'
-#               script: |
-#                 # install ZIP
-#                 sudo apt-get update -y
-#                 sudo apt-get -y install zip
-#                 sudo apt-get -y install python3-pip
-#           - task: Bash@3
-#             inputs:
-#               targetType: 'inline'
-#               script: |
-#                 # install JAVA, APACHE2
-#                 sudo apt-get update -y
-#                 sudo apt-get install openjdk-8-jdk -y
-#                 sudo apt-get install apache2 -y
-#                 sudo systemctl start apache2
-#                 sudo systemctl enable apache2
-#           - task: JMeterInstaller@0
-#             inputs:
-#               jmeterVersion: '5.4.2'
-#           - task: Bash@3
-#             inputs:
-#               targetType: 'inline'
-#               script: |
-#                 sudo apt-get install python default-jre-headless python-pip python-dev libxml2-dev libxslt-dev zlib1g-dev -y
-#                 sudo pip install bzt
-#           # - task: TaurusInstaller@0
-#           #   inputs:
-#           #     taurusVersion: '1.15.3'
-#           #     pythonCommand: 'python3'
-#           - task: TaurusRunner@0
-#             inputs:
-#               taurusConfig: |
-#                 execution:
-#                 - scenario:
-#                     # You can also reference a JMeter test plan (recommended)
-#                     script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
-#                   concurrency: 5
-#                   iterations: 10
-#                   ramp-up: 2s
+- stage: Deployment
+  jobs:
+  - deployment: FakeRestAPI
+    pool:
+      name: $(poolName)
+      vmImage: $(vmImageName)
+    # environment:
+    #   name:  'hsonnlEnvScaleSet'
+    #   resourceName: 'hsonnlLinuxVMScaleSet'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appType: 'webApp'
+              appName: $(webAppName)
+              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+              deploymentMethod: 'auto'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # install ZIP
+                sudo apt-get update -y
+                sudo apt-get -y install zip
+                sudo apt-get -y install python3-pip
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # install JAVA, APACHE2
+                sudo apt-get update -y
+                sudo apt-get install openjdk-8-jdk -y
+                sudo apt-get install apache2 -y
+                sudo systemctl start apache2
+                sudo systemctl enable apache2
+          - task: JMeterInstaller@0
+            inputs:
+              jmeterVersion: '5.4.2'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                sudo apt-get install python default-jre-headless python-pip python-dev libxml2-dev libxslt-dev zlib1g-dev -y
+                sudo pip install bzt
+          # - task: TaurusInstaller@0
+          #   inputs:
+          #     taurusVersion: '1.15.3'
+          #     pythonCommand: 'python3'
+          - task: TaurusRunner@0
+            inputs:
+              taurusConfig: |
+                execution:
+                - scenario:
+                    # You can also reference a JMeter test plan (recommended)
+                    script: $(Pipeline.Workspace)/automatedtesting/jmeter/Starter.jmx
+                  concurrency: 5
+                  iterations: 10
+                  ramp-up: 2s
                 
-#                 reporting:
-#                 - module: junit-xml
-#                   filename: my-taurus-output-2/TEST-Taurus.xml
-#               jmeterHome: '$(JMeterInstaller.JMeterHome)'
-#               jmeterPath: '$(JMeterInstaller.JMeterPath)'
-#               jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
-#               outputDir: 'my-taurus-output-2'
+                reporting:
+                - module: junit-xml
+                  filename: my-taurus-output-2/TEST-Taurus.xml
+              jmeterHome: '$(JMeterInstaller.JMeterHome)'
+              jmeterPath: '$(JMeterInstaller.JMeterPath)'
+              jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
+              outputDir: 'my-taurus-output-2'
 #   - deployment: VMDeploy
 #     displayName: web
 #     environment:
