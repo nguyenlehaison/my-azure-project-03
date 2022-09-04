@@ -36,10 +36,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://hsonnlwebapp.azurewebsites.net/api/v1/create",
+					"raw": "https://hsonnl1998asweb.azurewebsites.net/api/v1/create",
 					"protocol": "https",
 					"host": [
-						"hsonnlwebapp",
+						"hsonnl1998asweb",
 						"azurewebsites",
 						"net"
 					],
@@ -73,10 +73,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://hsonnlwebapp.azurewebsites.net/api/v1/employees",
+					"raw": "https://hsonnl1998asweb.azurewebsites.net/api/v1/employees",
 					"protocol": "https",
 					"host": [
-						"hsonnlwebapp",
+						"hsonnl1998asweb",
 						"azurewebsites",
 						"net"
 					],
