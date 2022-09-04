@@ -1,0 +1,18 @@
+{
+ "execution": [
+  {
+   "scenario": {
+    "script": "/home/hsonnl/azagent/_work/1/automatedtesting/jmeter/Starter.jmx"
+   },
+   "concurrency": 5,
+   "iterations": 10,
+   "ramp-up": "2s"
+  }
+ ],
+ "reporting": [
+  {
+   "module": "junit-xml",
+   "filename": "my-taurus-output-3/TEST-Taurus.xml"
+  }
+ ]
+}

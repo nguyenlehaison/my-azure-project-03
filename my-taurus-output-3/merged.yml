@@ -1,0 +1,11 @@
+---
+execution:
+- concurrency: 5
+  iterations: 10
+  ramp-up: 2s
+  scenario:
+    script: /home/hsonnl/azagent/_work/1/automatedtesting/jmeter/Starter.jmx
+reporting:
+- filename: my-taurus-output-3/TEST-Taurus.xml
+  module: junit-xml
+
