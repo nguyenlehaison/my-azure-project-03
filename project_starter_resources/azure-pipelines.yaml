@@ -126,6 +126,7 @@ stages:
               targetType: 'inline'
               script: |
                 sudo apt-get install python default-jre-headless python-pip python-dev libxml2-dev libxslt-dev zlib1g-dev -y
+                sudo apt install npm -y
                 sudo pip install bzt
           # - task: TaurusInstaller@0
           #   inputs:
@@ -195,6 +196,7 @@ stages:
       inputs:
         versionSpec: '12.x'
         checkLatest: true
+    
     - task: CmdLine@2
       displayName: Install Newman
       inputs:
