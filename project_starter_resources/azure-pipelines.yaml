@@ -149,64 +149,64 @@ stages:
               jmeterPath: '$(JMeterInstaller.JMeterPath)'
               jmeterVersion: '$(JMeterInstaller.JMeterVersion)'
               outputDir: 'my-taurus-output-2'
-#   - deployment: VMDeploy
-#     displayName: web
-#     environment:
-#       name:  'hsonnlEnv'
-#       resourceName: 'hsonnlVM'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: Bash@3
-#             inputs:
-#               targetType: 'inline'
-#               script: |
-#                 #! /bin/bash
+  - deployment: VMDeploy
+    displayName: web
+    environment:
+      name:  'hsonnlEnv'
+      resourceName: 'hsonnlVM'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                #! /bin/bash
                 
-#                 sudo apt-get upgrade -y
-#                 sudo apt-get install unzip -y
-#                 sudo apt-get install -y chromium-browser
-#                 sudo apt-get install chromium-chromedriver -y
-#                 pip3 install selenium
-#                 pip install selenium
-#                 echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
-#                 source ~/.bash_profile
+                sudo apt-get upgrade -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                sudo apt-get install chromium-chromedriver -y
+                pip3 install selenium
+                pip install selenium
+                echo 'export PATH=$PATH:/path/to/driver' >> ~/.bash_profile
+                source ~/.bash_profile
                 
-#           - task: Bash@3
-#             inputs:
-#               targetType: 'inline'
-#               script: |
-#                 # Run selenium
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Run selenium
                 
-#                 git clone https://github.com/nguyenlehaison/my-azure-project-03.git
-#                 cd ./my-azure-project-03/
-#                 git pull
-#                 cd ./automatedtesting/selenium/
-#                 python3 login.py
-# - stage: Postman
-#   jobs:
-#   - job: Postman
-#     pool:
-#       name: $(poolName)
-#       vmImage: $(vmImageName)
-#     steps:
-#     - task: CmdLine@2
-#       displayName: Install Newman
-#       inputs:
-#         script: 'sudo npm install -g newman'
-#         workingDirectory: $(System.DefaultWorkingDirectory)
-#     - task: CmdLine@2
-#       displayName: Run Regression Tests
-#       continueOnError: true
-#       inputs:
-#         script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
+                git clone https://github.com/nguyenlehaison/my-azure-project-03.git
+                cd ./my-azure-project-03/
+                git pull
+                cd ./automatedtesting/selenium/
+                python3 login.py
+- stage: Postman
+  jobs:
+  - job: Postman
+    pool:
+      name: $(poolName)
+      vmImage: $(vmImageName)
+    steps:
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: 'sudo npm install -g newman'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run StarterAPIs.json  --reporters cli,junit --reporter-junit-export junit-report.xml'
 
-#         workingDirectory: './automatedtesting/postman'
-#     - task: PublishTestResults@2
-#       displayName: 'Publish Test Results for postman'
-#       inputs:
-#         testResultsFormat: 'JUnit'
-#         testResultsFiles: '**/*.xml'
-#         mergeTestResults: true
-#         failTaskOnFailedTests: false
+        workingDirectory: './automatedtesting/postman'
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results for postman'
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/*.xml'
+        mergeTestResults: true
+        failTaskOnFailedTests: false
