@@ -36,7 +36,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://hsonnlasweb.azurewebsites.net/api/v1/create",
+					"raw": "https://hsonnlwebapp.azurewebsites.net/api/v1/create",
 					"protocol": "https",
 					"host": [
 						"hsonnlasweb",
@@ -73,7 +73,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://hsonnlasweb.azurewebsites.net/api/v1/employees",
+					"raw": "https://hsonnlwebapp.azurewebsites.net/api/v1/employees",
 					"protocol": "https",
 					"host": [
 						"hsonnlasweb",
