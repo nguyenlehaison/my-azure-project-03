@@ -39,7 +39,7 @@
 					"raw": "https://hsonnlwebapp.azurewebsites.net/api/v1/create",
 					"protocol": "https",
 					"host": [
-						"hsonnlasweb",
+						"hsonnlwebapp",
 						"azurewebsites",
 						"net"
 					],
@@ -76,7 +76,7 @@
 					"raw": "https://hsonnlwebapp.azurewebsites.net/api/v1/employees",
 					"protocol": "https",
 					"host": [
-						"hsonnlasweb",
+						"hsonnlwebapp",
 						"azurewebsites",
 						"net"
 					],
