@@ -95,7 +95,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription: hsonnlServiceConnection
+              azureSubscription: testServiceConnection
               appType: 'webApp'
               appName: $(webAppName)
               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
